@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@jest/globals";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { getEnumKeys } from "../../src/utils.js";
+import { getEnumKeys, safeEnumConvert } from "../../src/utils.js";
 import { DefinitionQueryOrder, BuildQueryOrder, StageUpdateType } from "azure-devops-node-api/interfaces/BuildInterfaces.js";
 import { ReleaseDefinitionExpands, ReleaseDefinitionQueryOrder, ReleaseStatus, ReleaseQueryOrder, ReleaseExpands } from "azure-devops-node-api/interfaces/ReleaseInterfaces.js";
 
@@ -96,6 +96,27 @@ describe("Enum Schema Generation", () => {
       expect(BuildQueryOrder["QueueTimeDescending" as keyof typeof BuildQueryOrder]).toBe(4);
       expect(StageUpdateType["Retry" as keyof typeof StageUpdateType]).toBe(1);
       expect(ReleaseStatus["Active" as keyof typeof ReleaseStatus]).toBe(2);
+    });
+  });
+
+  describe("safeEnumConvert utility", () => {
+    it("should convert a valid string key to its enum value", () => {
+      expect(safeEnumConvert(DefinitionQueryOrder, "None")).toBe(DefinitionQueryOrder.None);
+      expect(safeEnumConvert(DefinitionQueryOrder, "LastModifiedAscending")).toBe(DefinitionQueryOrder.LastModifiedAscending);
+      expect(safeEnumConvert(ReleaseStatus, "Active")).toBe(ReleaseStatus.Active);
+    });
+
+    it("should return undefined when key is undefined", () => {
+      expect(safeEnumConvert(DefinitionQueryOrder, undefined)).toBeUndefined();
+    });
+
+    it("should return undefined when key is an empty string", () => {
+      expect(safeEnumConvert(DefinitionQueryOrder, "")).toBeUndefined();
+    });
+
+    it("should return undefined when key is not a valid enum key", () => {
+      expect(safeEnumConvert(DefinitionQueryOrder, "InvalidKey")).toBeUndefined();
+      expect(safeEnumConvert(ReleaseStatus, "NotARealStatus")).toBeUndefined();
     });
   });
 });
