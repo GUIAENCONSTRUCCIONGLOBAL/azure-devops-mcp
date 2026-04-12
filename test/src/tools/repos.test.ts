@@ -261,6 +261,9 @@ describe("configureRepoTools", () => {
 
       const repos = JSON.parse(result.content[0].text);
       expect(repos).toHaveLength(2);
+      // undefined name sorts as equal (returns 0), so original order is preserved
+      expect(repos[0].id).toBe("r1");
+      expect(repos[1].name).toBe("Zeta Repo");
     });
   });
 
@@ -468,6 +471,9 @@ describe("configureRepoTools", () => {
 
       const threads = JSON.parse(result.content[0].text);
       expect(threads).toHaveLength(2);
+      // undefined id treated as 0, so undefined-id thread sorts before thread with id=2
+      expect(threads[0].id).toBeUndefined(); // JSON.stringify omits undefined properties
+      expect(threads[1].id).toBe(2);
     });
   });
 
@@ -517,6 +523,9 @@ describe("configureRepoTools", () => {
 
       const comments = JSON.parse(result.content[0].text);
       expect(comments).toHaveLength(2);
+      // undefined id treated as 0, so undefined-id comment sorts before comment with id=2
+      expect(comments[0].content).toBe("First");
+      expect(comments[1].content).toBe("Second");
     });
   });
 
