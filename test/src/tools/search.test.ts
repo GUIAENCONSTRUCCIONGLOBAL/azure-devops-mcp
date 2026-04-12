@@ -83,10 +83,7 @@ describe("configureSearchTools", () => {
         top: 5,
       });
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("almsearch.dev.azure.com/test-org/_apis/search/codesearchresults"),
-        expect.objectContaining({ method: "POST" })
-      );
+      expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining("almsearch.dev.azure.com/test-org/_apis/search/codesearchresults"), expect.objectContaining({ method: "POST" }));
       expect(result.content[0].text).toContain('"results"');
     });
 
@@ -263,10 +260,7 @@ describe("configureSearchTools", () => {
         top: 10,
       });
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("almsearch.dev.azure.com/test-org/_apis/search/wikisearchresults"),
-        expect.objectContaining({ method: "POST" })
-      );
+      expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining("almsearch.dev.azure.com/test-org/_apis/search/wikisearchresults"), expect.objectContaining({ method: "POST" }));
       expect(result.content[0].text).toBe(mockResults);
     });
 
@@ -360,10 +354,7 @@ describe("configureSearchTools", () => {
         top: 10,
       });
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("almsearch.dev.azure.com/test-org/_apis/search/workitemsearchresults"),
-        expect.objectContaining({ method: "POST" })
-      );
+      expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining("almsearch.dev.azure.com/test-org/_apis/search/workitemsearchresults"), expect.objectContaining({ method: "POST" }));
       expect(result.content[0].text).toBe(mockResults);
     });
 

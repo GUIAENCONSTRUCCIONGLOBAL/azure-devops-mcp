@@ -309,9 +309,9 @@ describe("configureRepoTools", () => {
       const handler = getHandler("repo_list_pull_requests_by_repo");
       mockGitApi.getPullRequests.mockResolvedValue([]);
 
-      await expect(
-        handler({ repositoryId: "repo1", top: 100, skip: 0, created_by_me: false, i_am_reviewer: false, status: "UnknownStatus" })
-      ).rejects.toThrow("Unknown pull request status: UnknownStatus");
+      await expect(handler({ repositoryId: "repo1", top: 100, skip: 0, created_by_me: false, i_am_reviewer: false, status: "UnknownStatus" })).rejects.toThrow(
+        "Unknown pull request status: UnknownStatus"
+      );
     });
 
     it("should fetch current user when created_by_me is true", async () => {
@@ -408,7 +408,15 @@ describe("configureRepoTools", () => {
           lastUpdatedDate: "2024-01-02",
           status: 1,
           comments: [
-            { id: 1, isDeleted: false, author: { displayName: "User", uniqueName: "user@test.com" }, content: "Hello", publishedDate: "2024-01-01", lastUpdatedDate: "2024-01-01", lastContentUpdatedDate: "2024-01-01" },
+            {
+              id: 1,
+              isDeleted: false,
+              author: { displayName: "User", uniqueName: "user@test.com" },
+              content: "Hello",
+              publishedDate: "2024-01-01",
+              lastUpdatedDate: "2024-01-01",
+              lastContentUpdatedDate: "2024-01-01",
+            },
             { id: 2, isDeleted: true, author: { displayName: "User2" }, content: "Deleted", publishedDate: "2024-01-01", lastUpdatedDate: "2024-01-01", lastContentUpdatedDate: "2024-01-01" },
           ],
         },
@@ -449,7 +457,15 @@ describe("configureRepoTools", () => {
     it("should return trimmed comments by default", async () => {
       const handler = getHandler("repo_list_pull_request_thread_comments");
       const mockComments = [
-        { id: 1, isDeleted: false, author: { displayName: "User", uniqueName: "user@test.com" }, content: "A comment", publishedDate: "2024-01-01", lastUpdatedDate: "2024-01-01", lastContentUpdatedDate: "2024-01-01" },
+        {
+          id: 1,
+          isDeleted: false,
+          author: { displayName: "User", uniqueName: "user@test.com" },
+          content: "A comment",
+          publishedDate: "2024-01-01",
+          lastUpdatedDate: "2024-01-01",
+          lastContentUpdatedDate: "2024-01-01",
+        },
       ];
       mockGitApi.getComments.mockResolvedValue(mockComments);
 
@@ -484,11 +500,7 @@ describe("configureRepoTools", () => {
   describe("repo_list_branches_by_repo tool", () => {
     it("should return filtered branch names", async () => {
       const handler = getHandler("repo_list_branches_by_repo");
-      mockGitApi.getRefs.mockResolvedValue([
-        { name: "refs/heads/main" },
-        { name: "refs/heads/feature" },
-        { name: "refs/tags/v1.0" },
-      ]);
+      mockGitApi.getRefs.mockResolvedValue([{ name: "refs/heads/main" }, { name: "refs/heads/feature" }, { name: "refs/tags/v1.0" }]);
 
       const result = await handler({ repositoryId: "repo1", top: 100 });
 
@@ -665,25 +677,23 @@ describe("configureRepoTools", () => {
     it("should throw when rightFileStartLine is less than 1", async () => {
       const handler = getHandler("repo_create_pull_request_thread");
 
-      await expect(
-        handler({ repositoryId: "repo1", pullRequestId: 1, content: "Comment", rightFileStartLine: 0 })
-      ).rejects.toThrow("rightFileStartLine must be greater than or equal to 1.");
+      await expect(handler({ repositoryId: "repo1", pullRequestId: 1, content: "Comment", rightFileStartLine: 0 })).rejects.toThrow("rightFileStartLine must be greater than or equal to 1.");
     });
 
     it("should throw when rightFileStartOffset is less than 1", async () => {
       const handler = getHandler("repo_create_pull_request_thread");
 
-      await expect(
-        handler({ repositoryId: "repo1", pullRequestId: 1, content: "Comment", rightFileStartLine: 5, rightFileStartOffset: 0 })
-      ).rejects.toThrow("rightFileStartOffset must be greater than or equal to 1.");
+      await expect(handler({ repositoryId: "repo1", pullRequestId: 1, content: "Comment", rightFileStartLine: 5, rightFileStartOffset: 0 })).rejects.toThrow(
+        "rightFileStartOffset must be greater than or equal to 1."
+      );
     });
 
     it("should throw when rightFileEndLine is set without rightFileStartLine", async () => {
       const handler = getHandler("repo_create_pull_request_thread");
 
-      await expect(
-        handler({ repositoryId: "repo1", pullRequestId: 1, content: "Comment", rightFileEndLine: 10 })
-      ).rejects.toThrow("rightFileEndLine must only be specified if rightFileStartLine is also specified.");
+      await expect(handler({ repositoryId: "repo1", pullRequestId: 1, content: "Comment", rightFileEndLine: 10 })).rejects.toThrow(
+        "rightFileEndLine must only be specified if rightFileStartLine is also specified."
+      );
     });
 
     it("should set rightFileEnd when rightFileEndLine and rightFileEndOffset are provided", async () => {
@@ -706,9 +716,9 @@ describe("configureRepoTools", () => {
     it("should throw when rightFileEndLine is less than 1", async () => {
       const handler = getHandler("repo_create_pull_request_thread");
 
-      await expect(
-        handler({ repositoryId: "repo1", pullRequestId: 1, content: "Comment", rightFileStartLine: 5, rightFileEndLine: 0 })
-      ).rejects.toThrow("rightFileEndLine must be greater than or equal to 1.");
+      await expect(handler({ repositoryId: "repo1", pullRequestId: 1, content: "Comment", rightFileStartLine: 5, rightFileEndLine: 0 })).rejects.toThrow(
+        "rightFileEndLine must be greater than or equal to 1."
+      );
     });
 
     it("should throw when rightFileEndOffset is less than 1", async () => {

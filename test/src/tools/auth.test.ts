@@ -41,7 +41,7 @@ describe("getCurrentUserDetails", () => {
     expect(global.fetch).toHaveBeenCalledWith("https://dev.azure.com/test-org/_apis/connectionData", {
       method: "GET",
       headers: {
-        Authorization: "Bearer mock-token",
+        "Authorization": "Bearer mock-token",
         "Content-Type": "application/json",
       },
     });
