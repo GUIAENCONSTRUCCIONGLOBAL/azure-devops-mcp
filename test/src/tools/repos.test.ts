@@ -249,6 +249,19 @@ describe("configureRepoTools", () => {
       expect(repos).toHaveLength(2);
       expect(repos[0].name).toBe("Repo B");
     });
+
+    it("should handle repositories with undefined names in sort (fallback to 0)", async () => {
+      const handler = getHandler("repo_list_repos_by_project");
+      mockGitApi.getRepositories.mockResolvedValue([
+        { id: "r1", name: undefined, isDisabled: false, isFork: false, isInMaintenance: false, webUrl: "url1", size: 100 },
+        { id: "r2", name: "Zeta Repo", isDisabled: false, isFork: false, isInMaintenance: false, webUrl: "url2", size: 200 },
+      ]);
+
+      const result = await handler({ project: "proj1", top: 100, skip: 0 });
+
+      const repos = JSON.parse(result.content[0].text);
+      expect(repos).toHaveLength(2);
+    });
   });
 
   describe("repo_list_pull_requests_by_repo tool", () => {
@@ -443,6 +456,19 @@ describe("configureRepoTools", () => {
       // When API returns null, the optional chaining results in undefined JSON
       expect(result.content[0].text).toBeUndefined();
     });
+
+    it("should sort threads with undefined id using fallback 0", async () => {
+      const handler = getHandler("repo_list_pull_request_threads");
+      mockGitApi.getThreads.mockResolvedValue([
+        { id: undefined, publishedDate: "2024-01-01", lastUpdatedDate: "2024-01-01", status: 1, comments: [] },
+        { id: 2, publishedDate: "2024-01-02", lastUpdatedDate: "2024-01-02", status: 1, comments: [] },
+      ]);
+
+      const result = await handler({ repositoryId: "repo1", pullRequestId: 1, top: 100, skip: 0, fullResponse: false });
+
+      const threads = JSON.parse(result.content[0].text);
+      expect(threads).toHaveLength(2);
+    });
   });
 
   describe("repo_list_pull_request_thread_comments tool", () => {
@@ -478,6 +504,19 @@ describe("configureRepoTools", () => {
 
       // When API returns null, the optional chaining results in undefined JSON
       expect(result.content[0].text).toBeUndefined();
+    });
+
+    it("should sort comments with undefined id using fallback 0", async () => {
+      const handler = getHandler("repo_list_pull_request_thread_comments");
+      mockGitApi.getComments.mockResolvedValue([
+        { id: undefined, isDeleted: false, author: { displayName: "User", uniqueName: "user@test.com" }, content: "First", publishedDate: "2024-01-01", lastUpdatedDate: "2024-01-01", lastContentUpdatedDate: "2024-01-01" },
+        { id: 2, isDeleted: false, author: { displayName: "User2", uniqueName: "user2@test.com" }, content: "Second", publishedDate: "2024-01-01", lastUpdatedDate: "2024-01-01", lastContentUpdatedDate: "2024-01-01" },
+      ]);
+
+      const result = await handler({ repositoryId: "repo1", pullRequestId: 1, threadId: 5, top: 100, skip: 0, fullResponse: false });
+
+      const comments = JSON.parse(result.content[0].text);
+      expect(comments).toHaveLength(2);
     });
   });
 

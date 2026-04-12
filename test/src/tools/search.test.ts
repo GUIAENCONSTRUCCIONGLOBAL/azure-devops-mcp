@@ -190,6 +190,37 @@ describe("configureSearchTools", () => {
       expect(result.content[0].text).toContain("Git item not found");
     });
 
+    it("should include string representation when non-Error is thrown during git item fetch", async () => {
+      const handler = getHandler();
+
+      const searchResults = {
+        results: [
+          {
+            project: { id: "proj-id" },
+            repository: { id: "repo-id" },
+            path: "/src/main.ts",
+            versions: [{ changeId: "commit-abc" }],
+          },
+        ],
+      };
+
+      (global.fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
+        ok: true,
+        text: jest.fn().mockResolvedValue(JSON.stringify(searchResults)),
+      } as unknown as Response);
+
+      mockGitApi.getItem.mockRejectedValue("non-error string thrown");
+
+      const result = await handler({
+        searchText: "test",
+        includeFacets: false,
+        skip: 0,
+        top: 5,
+      });
+
+      expect(result.content[0].text).toContain("non-error string thrown");
+    });
+
     it("should handle search results with missing fields in combined results", async () => {
       const handler = getHandler();
 
